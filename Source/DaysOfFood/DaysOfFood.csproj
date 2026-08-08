@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    Compiles against RimWorld via Krafs.Rimworld.Ref (reference assemblies — no game install needed)
+    and publicizes Assembly-CSharp for internal access. Harmony is compile-only (ExcludeAssets=runtime):
+    the runtime 0Harmony.dll is provided by the brrainz.harmony mod. Builds into the mod's 1.6/Assemblies.
+  -->
+  <PropertyGroup>
+    <AssemblyName>DaysOfFood</AssemblyName>
+    <RootNamespace>DaysOfFood</RootNamespace>
+    <OutputPath>..\..\1.6\Assemblies\</OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Krafs.Rimworld.Ref" Version="$(RimWorldRefVersion)" />
+    <PackageReference Include="Lib.Harmony" Version="$(HarmonyVersion)" ExcludeAssets="runtime" />
+    <PackageReference Include="Krafs.Publicizer" Version="$(PublicizerVersion)">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <Publicize Include="Assembly-CSharp" />
+  </ItemGroup>
+</Project>

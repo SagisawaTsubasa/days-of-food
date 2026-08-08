@@ -1,0 +1,57 @@
+[h1]Days of Food —— 按"天数"自动维持食物产量[/h1]
+
+还在手动估算"该做多少份饭"吗？这个模组让烹饪账单自己算。
+
+在食物账单的重复模式菜单中新增三个选项：[b]一天份 / 三天份 / 五天份[/b]。选定后，模组会按殖民地当前的实际吃饭人口自动算出该维持的食物数量，并每天自动更新一次——人多了自动加量，人少了自动减量，你只需要保证厨师和食材到位。
+
+[h1]它是怎么算的[/h1]
+[list]
+[*] 目标数量 = 本地图全体进食者的每日总营养需求 × 天数 ÷ 单份食物营养值
+[*] 统计范围：自由殖民者（含奴隶）+ 我方囚犯，访客和敌人不算
+[*] 每日需求直接读取小人的饥饿下降速率，[b]肠道蠕虫、胃部感染等饥饿加成自动包含在内[/b]，无需任何额外设置
+[*] 每张地图独立计算，每天自动刷新一次
+[*] 手动改数量也没关系，下次刷新会自动覆盖回计算值；切回原版模式即停止追踪
+[/list]
+
+[h1]兼容性[/h1]
+[list]
+[*] 底层基于原版"维持X个"模式实现，计数、暂停、进度显示 100% 走原版逻辑，不新增任何自定义模式定义
+[*] 与 Everybody Gets One、Compositable Loadouts、Ingredient Threshold 的自定义账单模式自动兼容
+[*] 支持 Nice Bill Tab（软依赖，没装也能正常用）
+[*] 存档安全：随时添加、随时移除，不影响已有存档
+[/list]
+
+[h1]需求[/h1]
+RimWorld 1.6 + Harmony
+
+源代码与问题反馈：https://github.com/lfore/days-of-food
+
+[hr][/hr]
+
+[h1]Days of Food — Keep N Days of Food in Stock, Automatically[/h1]
+
+Stop guessing how many meals your colony needs. This mod does the math for you.
+
+It adds three new repeat modes to food bills: [b]1 day / 3 days / 5 days of food[/b]. Once picked, the target count is computed from your colony's actual eating population and refreshed automatically once per day — more mouths means more meals, fewer means less waste. You just keep the cook and the ingredients coming.
+
+[h1]How it works[/h1]
+[list]
+[*] Target count = total daily nutrition need on this map × days ÷ nutrition per item
+[*] Eaters counted: free colonists (including slaves) and your prisoners — visitors and hostiles excluded
+[*] Daily need is read from each pawn's food-fall rate, so [b]hunger-rate effects like gut worms and stomach infections are included automatically[/b]
+[*] Computed per map and refreshed once per in-game day
+[*] Manual edits are simply overwritten on the next refresh; switching back to a vanilla mode stops tracking
+[/list]
+
+[h1]Compatibility[/h1]
+[list]
+[*] Built on the vanilla "Do until you have X" mode — counting, pausing and progress display stay 100% vanilla; no custom repeat-mode defs
+[*] Automatically compatible with custom bill modes from Everybody Gets One, Compositable Loadouts and Ingredient Threshold
+[*] Supports Nice Bill Tab (soft dependency — works fine without it)
+[*] Save-safe: add or remove at any time
+[/list]
+
+[h1]Requirements[/h1]
+RimWorld 1.6 + Harmony
+
+Source code & issues: https://github.com/lfore/days-of-food

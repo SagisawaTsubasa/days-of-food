@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <DaysOfFood.Menu.OneDay>一天份</DaysOfFood.Menu.OneDay>
+  <DaysOfFood.Menu.ThreeDays>三天份</DaysOfFood.Menu.ThreeDays>
+  <DaysOfFood.Menu.FiveDays>五天份</DaysOfFood.Menu.FiveDays>
+
+  <DaysOfFood.Menu.TipOneDay>自动维持 1 天的食物库存。目标数量按本地图全体需要进食者（殖民者、奴隶与囚犯，已含肠道蠕虫等饥饿速率影响）的每日总营养需求计算，每天自动刷新一次。</DaysOfFood.Menu.TipOneDay>
+  <DaysOfFood.Menu.TipThreeDays>自动维持 3 天的食物库存。目标数量按本地图全体需要进食者（殖民者、奴隶与囚犯，已含肠道蠕虫等饥饿速率影响）的每日总营养需求计算，每天自动刷新一次。</DaysOfFood.Menu.TipThreeDays>
+  <DaysOfFood.Menu.TipFiveDays>自动维持 5 天的食物库存。目标数量按本地图全体需要进食者（殖民者、奴隶与囚犯，已含肠道蠕虫等饥饿速率影响）的每日总营养需求计算，每天自动刷新一次。</DaysOfFood.Menu.TipFiveDays>
+
+  <DaysOfFood.RowMarker>[自动{0}天] </DaysOfFood.RowMarker>
+
+</LanguageData>

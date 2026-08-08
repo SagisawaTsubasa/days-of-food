@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <DaysOfFood.Menu.OneDay>1 day of food</DaysOfFood.Menu.OneDay>
+  <DaysOfFood.Menu.ThreeDays>3 days of food</DaysOfFood.Menu.ThreeDays>
+  <DaysOfFood.Menu.FiveDays>5 days of food</DaysOfFood.Menu.FiveDays>
+
+  <DaysOfFood.Menu.TipOneDay>Keep 1 day of food in stock. The target count is computed automatically from this map's total daily nutrition need (colonists, slaves and prisoners, including hunger-rate effects such as gut worms) and refreshed once per day.</DaysOfFood.Menu.TipOneDay>
+  <DaysOfFood.Menu.TipThreeDays>Keep 3 days of food in stock. The target count is computed automatically from this map's total daily nutrition need (colonists, slaves and prisoners, including hunger-rate effects such as gut worms) and refreshed once per day.</DaysOfFood.Menu.TipThreeDays>
+  <DaysOfFood.Menu.TipFiveDays>Keep 5 days of food in stock. The target count is computed automatically from this map's total daily nutrition need (colonists, slaves and prisoners, including hunger-rate effects such as gut worms) and refreshed once per day.</DaysOfFood.Menu.TipFiveDays>
+
+  <DaysOfFood.RowMarker>[Auto {0}d] </DaysOfFood.RowMarker>
+
+</LanguageData>
