@@ -35,11 +35,20 @@ namespace DaysOfFood
                 autoDays = new Dictionary<string, int>();
         }
 
-        /// <summary>Days this bill is tracked for, or 0 when not auto-tracked.</summary>
+        /// <summary>Days this bill is tracked for, or 0 when not auto-tracked. Mode-aware: auto
+        /// tracking only lives on TargetCount, so a bill switched to any other mode is untracked
+        /// IMMEDIATELY (lazily clearing the entry) rather than waiting for the daily sweep — this
+        /// is what clears the "[自动N天]" row marker and button label the moment the player picks
+        /// "做X次" or "无限制".</summary>
         public int DaysOf(Bill bill)
         {
             if (bill == null)
                 return 0;
+            if (bill is Bill_Production prod && prod.repeatMode != BillRepeatModeDefOf.TargetCount)
+            {
+                autoDays.Remove(bill.GetUniqueLoadID());
+                return 0;
+            }
             return autoDays.TryGetValue(bill.GetUniqueLoadID(), out int d) ? d : 0;
         }
 

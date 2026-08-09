@@ -63,6 +63,34 @@ namespace DaysOfFood
             return Mathf.Max(1, Mathf.CeilToInt(dailyNeed * days / nutritionPerItem));
         }
 
+        /// <summary>
+        /// One-shot equivalent for "做X次 / RepeatCount" bills: how many CRAFTS cover
+        /// <paramref name="days"/> days of food. A craft yields the product count of the food product
+        /// (e.g. ×4 bulk recipes), so the per-craft nutrition is perItem × itemsPerCraft.
+        /// </summary>
+        public static int ComputeRepeatCount(Bill_Production bill, int days)
+        {
+            var map = bill?.Map;
+            if (map == null || !TryGetFoodNutritionPerItem(bill.recipe, out float perItem))
+                return bill?.repeatCount ?? 1;
+            int itemsPerCraft = 1;
+            var products = bill.recipe.products;
+            if (products != null)
+            {
+                for (int i = 0; i < products.Count; i++)
+                {
+                    if (products[i].thingDef != null && products[i].thingDef.IsIngestible
+                        && products[i].thingDef.GetStatValueAbstract(StatDefOf.Nutrition) > 0f)
+                    {
+                        itemsPerCraft = Mathf.Max(1, products[i].count);
+                        break;
+                    }
+                }
+            }
+            float perCraft = perItem * itemsPerCraft;
+            return Mathf.Max(1, Mathf.CeilToInt(DailyNutritionNeed(map) * days / perCraft));
+        }
+
         /// <summary>Recompute and write the bill's target count immediately (used when a mode is picked).</summary>
         public static void ApplyTarget(Bill_Production bill, int days)
         {
