@@ -2,21 +2,21 @@
 
 还在手动估算该做多少份饭吗？这个模组让烹饪账单自己算。
 
-账单详情窗口"数量达到时暂停"下方会多出一个 [b]"自动维持数量"[/b] 开关。勾上它，填个天数（1 天、3 天、5 天，随便你），模组就会按殖民地当前的实际吃饭人口自动算出该维持的食物数量，并且每天自动更新一次。人多了自动加量，人少了自动减量，你只需要保证厨师和食材到位。
+在账单详情窗口"数量达到时暂停"下方会多出一个 [b]"自动维持数量"[/b] 开关。勾上它，填个天数（任意正整数，比如 5），模组就会按殖民地当前的实际吃饭人口自动算出该维持的食物数量，并且每天自动更新一次。人多了自动加量，人少了自动减量，你只需要保证厨师和食材到位。还可以叠加 [b]"到量暂停"[/b]：设维持 5 天、直到 2 天，库存达到 5 天量就暂停生产，跌破 2 天量再自动恢复。
 
 [h1]它是怎么算的[/h1]
 
 目标数量 = 本地图全体进食者的每日总营养需求 × 天数 ÷ 单份食物的营养值。
 
-统计范围是自由殖民者（含奴隶）和我方囚犯，访客和敌人不算。每日需求直接读取小人的饥饿下降速率，所以 [b]肠道蠕虫、胃部感染这类饥饿加成自动包含在内[/b]，不需要任何额外设置。每张地图独立计算，每天自动刷新一次。
+统计范围是自由殖民者（含奴隶）和我方囚犯（囚犯可在模组设置中关闭），访客和敌人不算。每日需求直接读取小人的饥饿下降速率，所以 [b]肠道蠕虫、胃部感染这类饥饿加成自动包含在内[/b]，不需要任何额外设置。每张地图独立计算，每天自动刷新一次。手动改过目标数量也没关系，下次刷新会覆盖回计算值。
 
 [h1]细节[/h1]
 
-只有产物是食物的账单会显示这个开关，"无限制"模式下不显示。手动改过目标数量也没关系，下次刷新会覆盖回计算值。切走"维持X个"模式会立刻停止追踪，复制粘贴账单会保留自动状态。存档安全，随时可以添加或移除。
+只有产物是食物的账单会显示这个开关，"无限制"模式下不显示。切走"维持X个"模式会立刻停止追踪，复制粘贴账单会保留自动状态（维持天数与暂停阈值都会携带）。模组设置里还有一个"计入我方囚犯"开关。存档安全，随时可以添加或移除。
 
 [h1]兼容性[/h1]
 
-尚未发现不兼容
+底层基于原版"维持X个"模式实现，与 Everybody Gets One、Compositable Loadouts、Ingredient Threshold 的自定义账单模式自动兼容，支持 Nice Bill Tab。尚未发现不兼容。
 
 [h1]需求[/h1]
 
@@ -30,21 +30,21 @@ RimWorld 1.6 + Harmony
 
 Stop guessing how many meals your colony needs. This mod does the math for you.
 
-A new [b]"Auto-maintain stock"[/b] toggle appears in the bill details dialog, right under "Pause when satisfied". Turn it on, set a number of days (1, 3, 5 — whatever you like), and the target count is computed from your colony's actual eating population, then refreshed automatically once per day. More mouths means more meals, fewer means less waste. You just keep the cook and the ingredients coming.
+A new [b]"Auto-maintain stock"[/b] toggle appears in the bill details dialog, right under "Pause when satisfied". Turn it on, set any positive number of days, and the target count is computed from your colony's actual eating population, then refreshed automatically once per day. More mouths means more meals, fewer means less waste. You just keep the cook and the ingredients coming. You can also stack [b]"Pause when stocked"[/b]: maintain 5 days, resume below 2 — crafting pauses once 5 days are stocked and starts again when the stock drops under 2 days.
 
 [h1]How it works[/h1]
 
 Target count = total daily nutrition need on this map × days ÷ nutrition per item.
 
-Eaters counted are free colonists (including slaves) and your prisoners; visitors and hostiles are excluded. Daily need is read from each pawn's food-fall rate, so [b]hunger-rate effects like gut worms and stomach infections are included automatically[/b]. Each map is computed independently, refreshed once per in-game day.
+Eaters counted are free colonists (including slaves) and your prisoners (prisoners can be excluded in the mod options); visitors and hostiles are excluded. Daily need is read from each pawn's food-fall rate, so [b]hunger-rate effects like gut worms and stomach infections are included automatically[/b]. Each map is computed independently, refreshed once per in-game day. Manual edits to the target are fine — the next refresh simply overwrites them.
 
 [h1]Details[/h1]
 
-The toggle only shows on bills whose product is edible food, and never in "Do forever" mode. Manual edits to the target are fine — the next refresh simply overwrites them. Switching the bill away from "Do until you have X" stops tracking immediately, and copying a bill keeps its auto state. Safe to add or remove from a save at any time.
+The toggle only shows on bills whose product is edible food, and never in "Do forever" mode. Switching the bill away from "Do until you have X" stops tracking immediately, and copying a bill keeps its auto state (maintained days and the pause threshold travel together). The mod options also include a "count colony prisoners" toggle. Safe to add or remove from a save at any time.
 
 [h1]Compatibility[/h1]
 
-No incompatibilities have been found so far.
+Built on the vanilla "maintain X" mode implementation; automatically compatible with custom bill modes from Everybody Gets One, Compositable Loadouts and Ingredient Threshold; supports Nice Bill Tab. No incompatibilities have been found so far.
 
 [h1]Requirements[/h1]
 
