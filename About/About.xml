@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Mod version: 1.1.0 (RimWorld has no version field in ModMetaData; the authoritative version
+<!-- Mod version: 1.2.0 (RimWorld has no version field in ModMetaData; the authoritative version
      is the assembly version in Source/Directory.Build.props — keep this comment in sync.) -->
 <ModMetaData>
   <name>Days of Food</name>
@@ -8,7 +8,7 @@
   <supportedVersions>
     <li>1.6</li>
   </supportedVersions>
-  <description>按天数自动维持食物产量：新增"一天份/三天份/五天份"账单模式，按全图进食人口每日自动计算目标数量。&#xA;&#xA;Keep 1/3/5 days of food in stock automatically — food bill targets computed daily from your colony's real nutrition need.</description>
+  <description>按天数自动维持食物产量：在"维持X个"账单上勾选"自动维持数量"并填写任意天数，按全图进食人口每日自动计算目标数量。&#xA;&#xA;Keep N days of food in stock automatically — set any number of days on a bill and its target is recomputed daily from your colony's real nutrition need.</description>
   <modDependencies>
     <li>
       <packageId>brrainz.harmony</packageId>

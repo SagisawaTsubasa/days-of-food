@@ -21,20 +21,30 @@ namespace DaysOfFood
         internal sealed class DaysCarrier
         {
             public int days;
-            public DaysCarrier(int days) { this.days = days; }
+            public int pauseDays;
+            public DaysCarrier(int days, int pauseDays)
+            {
+                this.days = days;
+                this.pauseDays = pauseDays;
+            }
         }
 
         static void Postfix(Bill_Production __instance, ref Bill __result)
         {
             if (!(__result is Bill_Production clone))
                 return;
-            int days = AutoFoodGameComponent.Instance?.DaysOf(__instance) ?? 0;
+            var comp = AutoFoodGameComponent.Instance;
+            int days = comp?.DaysOf(__instance) ?? 0;
+            int pauseDays = comp?.PauseDaysOf(__instance) ?? 0;
             // Also re-carry when the source is itself an un-pasted clipboard clone.
             if (days <= 0 && Carry.TryGetValue(__instance, out var prev))
+            {
                 days = prev.days;
+                pauseDays = prev.pauseDays;
+            }
             Carry.Remove(clone);
             if (days > 0)
-                Carry.Add(clone, new DaysCarrier(days));
+                Carry.Add(clone, new DaysCarrier(days, pauseDays));
         }
     }
 
@@ -53,7 +63,7 @@ namespace DaysOfFood
             if (carried.days > 0 && prod.repeatMode == BillRepeatModeDefOf.TargetCount
                 && NutritionCalc.TryGetFoodNutritionPerItem(prod.recipe, out _))
             {
-                AutoFoodGameComponent.Instance?.SetDays(prod, carried.days);
+                AutoFoodGameComponent.Instance?.SetDays(prod, carried.days, carried.pauseDays);
             }
         }
     }

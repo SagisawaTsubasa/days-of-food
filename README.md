@@ -12,6 +12,8 @@
 
 只有产物是食物的账单会显示这个开关，"无限制"模式下不显示。手动改过目标数量也没关系，下次每日刷新会覆盖回计算值。切走"维持X个"模式会立刻停止追踪，复制粘贴账单会保留自动状态。存档安全，随时可以添加或移除。
 
+自动维持还能叠加"到量暂停"：设维持 5 天、直到 2 天，库存达到 5 天量就暂停生产，跌破 2 天量再恢复，不用手动反复开关账单。暂停天数会自动钳制在维持天数之下，复制粘贴账单同样携带。
+
 ## 兼容性
 
 模组不修改任何账单下拉菜单，入口是内嵌在原版界面里的一行原生控件，因此和 haulers-dream、Everybody Gets One、Compositable Loadouts、Ingredient Threshold 等修改账单菜单的模组零冲突。它还可以和 haulers-dream 的批量烹饪叠加使用：这个模组负责每天算出补货目标，HD 按目标批量生产。
@@ -35,6 +37,8 @@ The target is the total daily nutrition need of everyone who eats on this map (f
 ## Details
 
 The toggle only shows on bills whose product is edible food, and never in "Do forever" mode. Manual edits to the target are fine — the next daily refresh simply overwrites them. Switching the bill away from "Do until you have X" stops tracking immediately, and copying a bill keeps its auto state. Safe to add or remove from a save at any time.
+
+Auto-maintain can also drive a "pause when stocked" threshold: set 5 days maintain and 2 days resume, and crafting pauses once 5 days are stocked, resuming only when the stock drops below 2 days — no more toggling bills by hand. The pause days are clamped below the maintained days, and the setting is carried by bill copy/paste.
 
 ## Compatibility
 

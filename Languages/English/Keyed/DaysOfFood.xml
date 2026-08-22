@@ -5,6 +5,13 @@
   <DaysOfFood.Section.TipToggle>When enabled, automatically keeps the given number of days of food in stock. The target count is computed from this map's total daily nutrition need (colonists, slaves and prisoners, including hunger-rate effects such as gut worms) and refreshed once per day.</DaysOfFood.Section.TipToggle>
   <DaysOfFood.Section.DaysLabel>Auto-maintain: {0} day(s)</DaysOfFood.Section.DaysLabel>
 
+  <DaysOfFood.Section.PauseLabel>Pause when stocked</DaysOfFood.Section.PauseLabel>
+  <DaysOfFood.Section.PauseTip>When on, crafting pauses once the maintained target is met, and resumes when the remaining stock falls below the pause-day amount below. The pause days are clamped to below the maintained days.</DaysOfFood.Section.PauseTip>
+  <DaysOfFood.Section.PauseDaysLabel>Resume at: {0} day(s)</DaysOfFood.Section.PauseDaysLabel>
+
   <DaysOfFood.RowMarker>[Auto {0}d] </DaysOfFood.RowMarker>
+
+  <DaysOfFood.Settings.IncludePrisoners>Count colony prisoners</DaysOfFood.Settings.IncludePrisoners>
+  <DaysOfFood.Settings.IncludePrisonersTip>When on, prisoners of the colony are included in the daily nutrition need that auto-maintained targets are computed from. Turn off to count only free colonists (including slaves).</DaysOfFood.Settings.IncludePrisonersTip>
 
 </LanguageData>

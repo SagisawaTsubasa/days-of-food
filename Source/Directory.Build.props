@@ -10,7 +10,7 @@
     <Nullable>disable</Nullable>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <!-- RimWorldRefVersion mirrors the game build. -->
     <RimWorldRefVersion>1.6.4518</RimWorldRefVersion>
     <HarmonyVersion>2.3.6</HarmonyVersion>

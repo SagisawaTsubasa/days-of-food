@@ -2,9 +2,16 @@
 <LanguageData>
 
   <DaysOfFood.Section.AutoLabel>自动维持数量</DaysOfFood.Section.AutoLabel>
-  <DaysOfFood.Section.TipToggle>开启后，自动按本地图全体需要进食者（殖民者、奴隶与囚犯，已含肠道蠕虫等饥饿速率影响）的每日总营养需求维持指定天数的食物库存，每天自动刷新一次目标数量。</DaysOfFood.Section.TipToggle>
+  <DaysOfFood.Section.TipToggle>开启后，自动按本地图全体需要进食者（殖民者、奴隶与囚犯，已含肠道蠕虫等饥饿速率影响）的每日总营养需求维持指定天数的食物库存，每天自动刷新一次目标数量。可在模组设置中关闭囚犯统计。</DaysOfFood.Section.TipToggle>
   <DaysOfFood.Section.DaysLabel>自动维持: {0} 天份</DaysOfFood.Section.DaysLabel>
 
+  <DaysOfFood.Section.PauseLabel>到量暂停</DaysOfFood.Section.PauseLabel>
+  <DaysOfFood.Section.PauseTip>开启后，库存达到自动维持的目标数量时暂停生产，直到库存降至下方设定的天数份量以下再恢复。该天数会自动钳制为小于维持天数。</DaysOfFood.Section.PauseTip>
+  <DaysOfFood.Section.PauseDaysLabel>直到: {0} 天份</DaysOfFood.Section.PauseDaysLabel>
+
   <DaysOfFood.RowMarker>[自动{0}天] </DaysOfFood.RowMarker>
+
+  <DaysOfFood.Settings.IncludePrisoners>计入我方囚犯</DaysOfFood.Settings.IncludePrisoners>
+  <DaysOfFood.Settings.IncludePrisonersTip>开启后，自动维持目标会把我方囚犯的每日营养需求一并计入；关闭则只统计自由殖民者（含奴隶）。</DaysOfFood.Settings.IncludePrisonersTip>
 
 </LanguageData>

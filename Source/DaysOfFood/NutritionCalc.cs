@@ -39,15 +39,20 @@ namespace DaysOfFood
 
         /// <summary>
         /// Total daily nutrition need of everyone on this map who eats: free colonists (slaves are
-        /// colonists) plus the colony's prisoners. Visitors, hostiles and non-eaters are excluded.
+        /// colonists) plus — unless the mod setting turns them off — the colony's prisoners. Visitors,
+        /// hostiles and non-eaters are excluded. The setting is read live, so changes apply immediately.
         /// </summary>
         public static float DailyNutritionNeed(Map map)
         {
             float total = 0f;
+            bool includePrisoners = DaysOfFoodMod.Settings != null && DaysOfFoodMod.Settings.includePrisoners;
             var pawns = map.mapPawns.FreeColonistsAndPrisoners;
             for (int i = 0; i < pawns.Count; i++)
             {
-                var food = pawns[i].needs?.food;
+                var pawn = pawns[i];
+                if (!includePrisoners && pawn.IsPrisonerOfColony)
+                    continue;
+                var food = pawn.needs?.food;
                 if (food == null)
                     continue;
                 total += food.FoodFallPerTickAssumingCategory(HungerCategory.Fed) * 60000f;
@@ -63,41 +68,20 @@ namespace DaysOfFood
             return Mathf.Max(1, Mathf.CeilToInt(dailyNeed * days / nutritionPerItem));
         }
 
-        /// <summary>
-        /// One-shot equivalent for "做X次 / RepeatCount" bills: how many CRAFTS cover
-        /// <paramref name="days"/> days of food. A craft yields the product count of the food product
-        /// (e.g. ×4 bulk recipes), so the per-craft nutrition is perItem × itemsPerCraft.
-        /// </summary>
-        public static int ComputeRepeatCount(Bill_Production bill, int days)
-        {
-            var map = bill?.Map;
-            if (map == null || !TryGetFoodNutritionPerItem(bill.recipe, out float perItem))
-                return bill?.repeatCount ?? 1;
-            int itemsPerCraft = 1;
-            var products = bill.recipe.products;
-            if (products != null)
-            {
-                for (int i = 0; i < products.Count; i++)
-                {
-                    if (products[i].thingDef != null && products[i].thingDef.IsIngestible
-                        && products[i].thingDef.GetStatValueAbstract(StatDefOf.Nutrition) > 0f)
-                    {
-                        itemsPerCraft = Mathf.Max(1, products[i].count);
-                        break;
-                    }
-                }
-            }
-            float perCraft = perItem * itemsPerCraft;
-            return Mathf.Max(1, Mathf.CeilToInt(DailyNutritionNeed(map) * days / perCraft));
-        }
-
-        /// <summary>Recompute and write the bill's target count immediately (used when a mode is picked).</summary>
-        public static void ApplyTarget(Bill_Production bill, int days)
+        /// <summary>Recompute and write the bill's target count (and, when auto-pause is enabled,
+        /// its vanilla pause threshold) immediately (used when a mode is picked or edited).</summary>
+        public static void ApplyTarget(Bill_Production bill, int days, int pauseDays = 0)
         {
             var map = bill?.Map;
             if (map == null || !TryGetFoodNutritionPerItem(bill.recipe, out float perItem))
                 return;
-            bill.targetCount = ComputeTarget(DailyNutritionNeed(map), days, perItem);
+            float dailyNeed = DailyNutritionNeed(map);
+            bill.targetCount = ComputeTarget(dailyNeed, days, perItem);
+            if (pauseDays > 0)
+            {
+                bill.pauseWhenSatisfied = true;
+                bill.unpauseWhenYouHave = ComputeTarget(dailyNeed, pauseDays, perItem);
+            }
         }
     }
 }

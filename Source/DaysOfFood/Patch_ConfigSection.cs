@@ -12,10 +12,8 @@ namespace DaysOfFood
     /// <summary>
     /// The mod's UI lives INSIDE the bill details dialog's repeat-mode section, as a native row:
     ///
-    ///  - TargetCount ("维持X个"): an "自动维持数量" label plus a vanilla-style value button
-    ///    (关闭 / 一天份 / 三天份 / 五天份) that arms daily auto-refresh of the target count.
-    ///  - RepeatCount ("做X次"): a "按天填入" button that writes the craft count equivalent to
-    ///    N days of food, once (crafts aren't stock — nothing to maintain).
+    ///  - TargetCount ("维持X个"): an "自动维持数量" checkbox plus a vanilla IntEntry for the day
+    ///    count (any positive integer) that arms daily auto-refresh of the target count.
     ///  - Forever / non-food bills: nothing is drawn and no extra height is added.
     ///
     /// Two transpiler edits on Dialog_BillConfig.DoWindowContents:
@@ -30,21 +28,35 @@ namespace DaysOfFood
     [HarmonyPatch(typeof(Dialog_BillConfig), nameof(Dialog_BillConfig.DoWindowContents))]
     public static class Patch_ConfigSection
     {
-        /// <summary>Extra section height needed when our rows are visible (checkbox + days entry).</summary>
-        private const int ExtraHeight = 84;
+        // Section heights for the mod's rows (checkbox 22, label ~26, IntEntry 30, +slack), matching
+        // exactly what DrawAutoRow draws so Listing.BeginSection never clips. See AdjustHeight.
+        private const int HeightCheckboxOnly = 28;
+        private const int HeightMaintain = 84; // checkbox + maintain label + maintain IntEntry
+        private const int HeightPauseCheckbox = 106; // + pause checkbox row
+        private const int HeightPauseFull = 162; // + pause label + pause IntEntry
 
-        // Per-dialog IntEntry edit buffer. Dialog_BillConfig is modal — at most one is open at a
-        // time — so a single static buffer is safe, mirroring vanilla's own *EditBuffer fields.
+        // Per-dialog IntEntry edit buffers. Dialog_BillConfig is modal — at most one is open at a
+        // time — so single static buffers are safe, mirroring vanilla's own *EditBuffer fields.
+        // Note: unlike vanilla's (instance) buffers, these SURVIVE across dialog instances, so
+        // DrawAutoRow resyncs them against the bill's real values before drawing (see SyncEditBuffer).
         private static string daysEditBuffer;
+        private static string pauseEditBuffer;
 
         // NB: RepeatModeSubdialogHeight is an int field — this signature must take/return int,
         // an int-on-stack call to a float method is invalid IL.
         public static int AdjustHeight(int height, Bill_Production bill)
         {
-            if (bill != null && bill.repeatMode == BillRepeatModeDefOf.TargetCount
-                && NutritionCalc.TryGetFoodNutritionPerItem(bill.recipe, out _))
-                return height + ExtraHeight;
-            return height;
+            if (bill == null || bill.repeatMode != BillRepeatModeDefOf.TargetCount
+                || !NutritionCalc.TryGetFoodNutritionPerItem(bill.recipe, out _))
+                return height;
+            var comp = AutoFoodGameComponent.Instance;
+            if (comp == null)
+                return height; // mod not loaded in this game; DrawAutoRow won't draw either
+            if (!comp.IsTracked(bill))
+                return height + HeightCheckboxOnly;
+            if (comp.DaysOf(bill) <= 1)
+                return height + HeightMaintain;
+            return comp.PauseDaysOf(bill) > 0 ? height + HeightPauseFull : height + HeightPauseCheckbox;
         }
 
         /// <summary>
@@ -80,6 +92,7 @@ namespace DaysOfFood
             if (comp.IsTracked(bill))
             {
                 int days = comp.DaysOf(bill);
+                SyncEditBuffer(ref daysEditBuffer, days);
                 listing.Label("DaysOfFood.Section.DaysLabel".Translate(days));
                 int edited = days;
                 listing.IntEntry(ref edited, ref daysEditBuffer);
@@ -91,8 +104,57 @@ namespace DaysOfFood
                     daysEditBuffer = edited.ToStringCached();
                 }
                 if (edited != days)
-                    comp.SetDays(bill, edited); // recomputes the target immediately
+                    comp.SetDays(bill, edited, comp.PauseDaysOf(bill));
+
+                // Auto-pause row: pause production when the maintained target is met, resume when
+                // the remaining stock drops below the pause-days target. Only reachable for days > 1.
+                if (days > 1)
+                {
+                    int pauseDays = comp.PauseDaysOf(bill);
+                    bool pauseToggled = pauseDays > 0;
+                    var pauseRect = listing.GetRect(22f);
+                    Widgets.CheckboxLabeled(pauseRect, "DaysOfFood.Section.PauseLabel".Translate(), ref pauseToggled);
+                    TooltipHandler.TipRegion(pauseRect, "DaysOfFood.Section.PauseTip".Translate());
+                    if (pauseToggled != (pauseDays > 0))
+                    {
+                        // Enabling defaults to half the maintained days; disabling releases the
+                        // vanilla control via SetDays.
+                        comp.SetDays(bill, days, pauseToggled ? Mathf.Max(1, days / 2) : 0);
+                    }
+                    pauseDays = comp.PauseDaysOf(bill);
+                    if (pauseDays > 0)
+                    {
+                        SyncEditBuffer(ref pauseEditBuffer, pauseDays);
+                        listing.Label("DaysOfFood.Section.PauseDaysLabel".Translate(pauseDays));
+                        int pEdited = pauseDays;
+                        listing.IntEntry(ref pEdited, ref pauseEditBuffer);
+                        if (pEdited < 1)
+                        {
+                            pEdited = 1;
+                            pauseEditBuffer = pEdited.ToStringCached();
+                        }
+                        if (pEdited >= days)
+                        {
+                            // The pause threshold must stay below the maintained days, otherwise the
+                            // vanilla resume check would fire immediately after every pause.
+                            pEdited = Mathf.Max(1, days - 1);
+                            pauseEditBuffer = pEdited.ToStringCached();
+                        }
+                        if (pEdited != pauseDays)
+                            comp.SetDays(bill, days, pEdited);
+                    }
+                }
             }
+        }
+
+        /// <summary>Shared edit buffers survive across dialog instances (this method is static), so
+        /// a stale buffer from a previously-opened bill can disagree with the value actually in
+        /// effect on this one. Resync only when the buffer holds a full number different from the
+        /// real value — an in-progress edit (empty or partial text like "-") is left alone.</summary>
+        private static void SyncEditBuffer(ref string buffer, int realValue)
+        {
+            if (int.TryParse(buffer, out int bufVal) && bufVal != realValue)
+                buffer = realValue.ToStringCached();
         }
 
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
